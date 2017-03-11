@@ -1,0 +1,55 @@
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath('org.springframework.boot:spring-boot-gradle-plugin:1.5.2.RELEASE')
+        classpath('com.bmuschko:gradle-docker-plugin:3.0.6')
+    }
+}
+
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'application'
+apply plugin: 'com.bmuschko.docker-java-application'
+
+jar {
+    baseName = 'ase.gradle-spring-docker'
+    version =  '0.0.1'
+}
+
+mainClassName = 'hello.world.Application'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web")
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+}
+
+jar.finalizedBy(bootRepackage)
+
+bootRun {
+    systemProperties "spring.profiles.active": "development"
+}
+
+
+docker {
+    url = 'unix:///var/run/docker.sock'
+
+    javaApplication {
+        baseImage = 'frolvlad/alpine-oraclejdk8:slim'
+        maintainer = 'ASE Team QSE 3'
+        ports = [8080]
+        tag = "registry.git-init.org/ase/gradle-spring-docker"
+    }
+
+    registryCredentials {
+        url = 'https://registry.git-init.org'
+        username = System.getProperty('registry_user', 'admin')
+        password = System.getProperty('registry_pass', 'password')
+    }
+}
