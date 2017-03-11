@@ -11,7 +11,7 @@ public class Application {
 
     @RequestMapping("/")
     public String home() {
-        return "Hello Spring Boot, Docker, Gralde";
+        return "Hello Continuous Deployment";
     }
 
     public static void main(String[] args) {
