@@ -49,7 +49,7 @@ docker {
 
     registryCredentials {
         url = 'https://registry.git-init.org'
-        username = System.getProperty('registry_user', 'admin')
-        password = System.getProperty('registry_pass', 'password')
+        username = System.getenv('registry_user')
+        password = System.getenv('registry_pass')
     }
 }
